@@ -7,14 +7,15 @@ Created on Mon Apr 25 09:49:37 2016
 
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+sys.path.append('/home/z1s/PythonScripts')
+import postprocess as pp
 
-x = [1,2,3,4,5]
-y1 = [1,2,3,4,5]
-y2 = [5,4,3,2,1]
-
-fig,ax1 = plt.subplots()
-ax1.plot(x,y1)
-#ax1.set_xlim([2,4])
-ax2 = ax1.twinx()
-ax2.plot(x,y2)
-ax2.set_xlim([2,4])
+fdir = '/archive/Zhaoyi.Shen/fms/ulm/AM2/AM2_control_1990/gfdl.ncrc3-default-prod-openmp/pp/atmos_level/'
+f = fdir+'ts/annual/16yr/atmos_level.1983-1998.netrad_toa.nc'
+ncf = nc.netcdf_file(f,'r',mmap=True)
+ann = ncf.variables['netrad_toa'][0,0,0].astype(np.float64)
+f = fdir+'ts/monthly/16yr/atmos_level.198301-199812.netrad_toa.nc'
+ncf = nc.netcdf_file(f,'r',mmap=True)
+tmp = ncf.variables['netrad_toa'][:12,0,0].astype(np.float64)
+mon = pp.month_to_year(tmp,np.ones(1),'annual')

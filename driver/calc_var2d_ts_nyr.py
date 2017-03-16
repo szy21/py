@@ -6,7 +6,7 @@ Created on Mon May 2 09:37:34 2016
 """
 
 import sys
-sys.path.append('/home/z1s/PythonScripts')
+sys.path.append('/home/z1s/py/lib')
 import binfile_io as fio
 import amgrid as grid
 from scipy.io import netcdf as nc
@@ -38,7 +38,7 @@ var = 't_surf'
 varo = 'tsfc'
 npert = np.size(pert)
 ind = range(npert)
-ind = [11,12]
+ind = [0,1,2,3,4,5,6,7]
 subdir = 'ts/monthly/6yr/'
 yrC = '000101-000612'
 #npert = 1
@@ -59,7 +59,6 @@ for i in ind:
     nphalf = np.size(phalf)
     #%%
     filedir = atmdir+subdir
-    
     filename = filedir+diag+'.'+yrC+'.'+var+'.nc'
     fs.append(nc.netcdf_file(filename,'r',mmap=True))
     #pfull = fs[-1].variables['pfull'][:].astype(np.float64)

@@ -6,7 +6,8 @@ Created on Mon Jun 29 15:00:50 2015
 """
 
 import sys
-sys.path.append('/home/z1s/PythonScripts')
+sys.path.append('/home/z1s/py/lib')
+import amgrid as grid
 import numpy as np
 from scipy import stats as st
 import matplotlib.pyplot as plt
@@ -21,58 +22,55 @@ mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42
 mpl.rcParams['ps.useafm'] = True
 
-Cp = 1004.64
-g = 9.80
-Rad = 6371.0e3
+CP_AIR = 1004.64
+GRAV = 9.80
+RAD = 6371.0e3
+LE = 2.5e6
 
-basedir = '/home/z1s/research/nonlinearity/analysis/npz/ts/'
-pert = ['ctrl','CO2',\
-        'm2c25w30','m2c30w30','m2c35w30','m2c40w30','m2c45w30','m2c50w30',\
-        'CO2+m2c35w30','CO2+m2c40w30','CO2+m2c45w30',\
-        'm3c35w30','m3c40w30']
-#pert = ['ctrl','CO2','m2c35w30','CO2+m2c35w30']
+outdir = '/home/z1s/research/nonlinear/npz/SM2/'
+outdir_sub = 'ts/annual/'
+pert = ['ctrl','2xCO2',\
+    'm4c25','m2c25','m1c25',\
+    #'m2c00','m2c05','m2c15','m2c25','m2c35','m2c45','m2c50','m6c25',\
+    #'m0.5c15','m6c35',\
+    #'2xCO2+m2c00','2xCO2+m2c05','2xCO2+m2c15','2xCO2+m2c25',\
+    #'2xCO2+m2c35','2xCO2+m2c45','2xCO2+m2c50','2xCO2+m6c35',\
+    #'2xCO2+m0.5c15','2xCO2+m8c15',
+    ]
 npert = np.size(pert)
-#npert = 4
-var = 'tsfc'
+var = 't_ref_zm'
 diag = 'var2d'
-filename = basedir+'dim.'+pert[0]+'_sigma.npz'
+time = '0761-0860'
+filename = outdir+'dim.'+pert[0]+'.npz'
 npz = np.load(filename)
 lat = npz['lat']
 nlat = np.size(lat)
-ntime = 72
-nyr = 6
+ntime = 100
 tmp = np.zeros([npert,ntime,nlat])
-tsfc = np.zeros([npert,ntime,nlat])
-rain = np.zeros([npert,ntime,nlat])
-ind = [0,1,2,3,4,5,6,7]
+t_ref = np.zeros([npert,ntime,nlat])
+precip = np.zeros([npert,ntime,nlat])
+netrad_toa = np.zeros([npert,ntime,nlat])
+ind = range(npert)
 for i in ind:
-    filename = basedir+diag+'.'+pert[i]+'_sigma.npz'
+    filename = outdir+outdir_sub+diag+'.'+time+'.'+pert[i]+'.npz'
     npz = np.load(filename)
-    tsfc[i,:,:] = npz['tsfc']
-    rain[i,:,:] = npz['rain_ls']+npz['rain_cv']
-    #tmp[i,:,:] = npz[var]
+    t_ref[i,:,:] = npz[var][:,:]
 
-weight = np.cos(lat*np.pi/180.)
-weight1 = weight/np.sum(weight)
-weight1.shape = [1,1,nlat]
-tmpglb = np.sum(tmp*weight1,2)
-tsfcglb = np.sum(tsfc*weight1,2)
-rainglb = np.sum(rain*weight1,2)
-tsfcglb1 = np.zeros([npert,nyr])
-rainglb1 = np.zeros([npert,nyr])
-for i in range(nyr):
-    tsfcglb1[:,i] = np.mean(tsfcglb[:,i*12:(i+1)*12],1)
-    rainglb1[:,i] = np.mean(rainglb[:,i*12:(i+1)*12],1)
+area = grid.calcGridArea(lat,1)
+area.shape = [1,1,nlat]
+t_ref_gm = np.sum(t_ref*area,2)/np.sum(area)
+precip_gm = np.sum(precip*area,2)
+netrad_toa_gm = np.sum(netrad_toa*area,2)/np.sum(area)
+#tmp_gm = np.sum(tmp*weight1,2)
+
 sc = 1
 z = np.zeros([npert,2])
-for i in [2,6,7]:
-    plt.plot((tsfcglb[i,:]-tsfcglb[0,:])*sc)
+
 plt.figure()   
-for i in [1,7]:
-    x = tsfcglb1[i,:]-tsfcglb1[0,:]
-    y = rainglb1[i,:]-rainglb1[0,:]
-    plt.plot(x,y,'.')
-    z[i,:] = np.polyfit(x,y,1)
+for i in ind:
+    x = t_ref_gm[i,:]-t_ref_gm[0,:]
+    plt.plot(x)
+    print np.mean(x[20:])
 
 #%%
 """
