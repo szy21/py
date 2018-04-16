@@ -11,18 +11,18 @@ import postprocess as pp
 from scipy.io import netcdf as nc
 import numpy as np
 
-indir = '/archive/Zhaoyi.Shen/home/research/climate/npz_interp/GISTEMP/AM3n/'
-indir_sub = 'ts/DJF/'
+indir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM2.1n/'
+indir_sub = 'ts/annual/'
 outdir = indir
 outdir_sub = indir_sub
-pert = ['all','SST','1860aero','aero']
+pert = ['LU']
 npert = np.size(pert)
 ens = ['_A1','_A2','_A3','_A4','_A5']
 nens = np.size(ens)
 diag = 'var2d'
 
-#var = ['t_ref','LWP','precip','low_cld_amt','mid_cld_amt','high_cld_amt','tot_cld_amt']
 var = ['t_ref']
+#var = ['salt_col','dust_col']
 """
 var = ['swdn_sfc','swup_sfc','swdn_toa','swup_toa',\
        'swdn_sfc_clr','swup_sfc_clr','swdn_toa_clr','swup_toa_clr',\

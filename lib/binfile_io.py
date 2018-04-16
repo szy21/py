@@ -20,5 +20,6 @@ def delete(filename, *args):
     npz = np.load(filename)
     npzdict = dict(npz)
     for var in args:
-        npzdict.pop(var)
+        if var in npzdict:
+            npzdict.pop(var)
     np.savez(filename,**npzdict)

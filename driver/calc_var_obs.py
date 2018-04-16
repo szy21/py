@@ -20,27 +20,29 @@ Le = 2.500e6
 g = 9.80
 Rair = 287.04
 Rad = 6371.0e3
-obs= 'GISTEMP'
+obs= 'BEST'
 indir = '/archive/Zhaoyi.Shen/home/research/climate/observation/'
-filename = indir+'GISTEMP/gistemp250.nc'
+filename = indir+'BEST/Complete_TAVG_LatLong1.nc'
 outdir = '/archive/Zhaoyi.Shen/home/research/climate/npz_interp/'+obs+'/'
-flag = ['annual','MAM','JJA','SON','DJF']
+flag = ['MJJASO']
 nflag = np.size(flag)
-sub_dict = {'annual':'annual','MAM':'MAM','JJA':'JJA','SON':'SON','DJF':'DJF'}
+sub_dict = {'annual':'annual',\
+    'MAM':'MAM','JJA':'JJA','SON':'SON','DJF':'DJF',\
+    'MJJASO':'MJJASO','JJASON':'JJASON'}
 diago = 'var2d'
-var = 'tempanomaly'
+var = 'temperature'
 varo = 't_ref'
 zm = False
 init = False
 init3d = False
-timeo = '1880-2015'
-yr_ts = np.arange(1880,2016,1)
+timeo = '1850-2015'
+yr_ts = np.arange(1850,2016,1)
 
 fs = []
 #fs.append(nc.netcdf_file(filename,'r',mmap=True))
 fs.append(Dataset(filename,'r',mmap=True))
-lat = np.array(fs[-1].variables['lat'][:].astype(np.float64))
-lon = np.array(fs[-1].variables['lon'][:].astype(np.float64))
+lat = np.array(fs[-1].variables['latitude'][:].astype(np.float64))
+lon = np.array(fs[-1].variables['longitude'][:].astype(np.float64))
 land_mask = 0
 if 'land_mask' in fs[-1].variables:
     land_mask = fs[-1].variables['land_mask'][:].astype(np.float64)
@@ -53,8 +55,8 @@ for fi in range(nfile):
     files.append(filename)
 ts = pp.ts_multi_files(files,var,0)
 #%%
-ts = ts[:-5,:,:]
-#ts = np.array(ts)
+ts = ts[1200:-5,:,:]
+#ts = ts[:-6,:,:]
 #ts[np.where(abs(ts)>999)] = np.nan
 if zm:
     ts = np.mean(ts,-1)

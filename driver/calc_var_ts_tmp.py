@@ -20,27 +20,25 @@ g = 9.80
 Rair = 287.04
 Rad = 6371.0e3
 
-indir = '/archive/ccsp/ipcc_ar4/'
-#indir = '/archive/bw/fms/memphis/narccap/'
-indir_sub = 'ts/monthly/140yr/'
-outdir = '/archive/Zhaoyi.Shen/home/research/climate/npz/perfect_model/'
-exper = 'CM2.1U-D4_1860-2000-'
-#exper = 'm45_narccap_hist_'
-pert_dict = {'AllForc_H2':'CM2','cm2':'AM2'}
-pert = ['AllForc_H2']
-ens = ['']
-enso = ens
+indir = '/archive/lwh/fms/riga_201104/'
+indir_sub = 'av/annual_1yr/'
+outdir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM3/'
+exper = 'c48L48_am3p9_'
+pert_dict = {'':'all_','1860_':'SST_','aeroOnly_':'aero_'}
+pert = ['','1860_','aeroOnly_']
+ens = ['ext']
+enso = ['A1']
 
 flag = ['']
 nflag = np.size(flag)
-sub_dict = {'':'monthly','annual':'annual','MAM':'MAM','JJA':'JJA','SON':'SON','DJF':'DJF'}
+sub_dict = {'':'annual','annual':'annual','MAM':'MAM','JJA':'JJA','SON':'SON','DJF':'DJF'}
 
 npert = np.size(pert)
 nens = np.size(ens)
-plat = ''
-diag = 'atmos'
+plat = 'gfdl.intel-prod/'
+diag = 'atmos_month_aer'
 diago = 'var2d'
-var = ['t_surf','alb_sfc','ice_mask']
+var = ['aer_ex_c_vs']
 
 nvar = np.size(var)
 varo = var
@@ -56,9 +54,9 @@ zm = False
 init = False
 init3d = False
 init3dp = False
-timeo = '196901-200012'
-yr1 = np.arange(1861,1862,1)
-yr2 = np.arange(2000,2001,1)
+timeo = '1900-1999'
+yr1 = np.arange(1900,2000,1)
+yr2 = np.arange(1900,2000,1)
 nyr1 = np.size(yr1)
 nyr = yr2[-1]-yr1[0]+1
 yr = np.arange(yr1[0],yr2[-1],1)
@@ -66,7 +64,8 @@ yrstr = []
 for yri in range(nyr1):
     yr1C = ('000'+str(yr1[yri]))[-4:]
     yr2C = ('000'+str(yr2[yri]))[-4:]
-    yrC = yr1C+'01-'+yr2C+'12.'
+    #yrC = yr1C+'01-'+yr2C+'12.'
+    yrC = yr1C+'.'
     yrstr.append(yrC)
 ind = range(nsim)
 nfile = np.size(yrstr)
@@ -100,7 +99,7 @@ for vi in range(nvar):
         filedir = atmdir+indir_sub
         files = []
         for fi in range(nfile):
-            filename = filedir+diag+'.'+yrstr[fi]+var[vi]+'.nc'
+            filename = filedir+diag+'.'+yrstr[fi]+'ann.nc'
             files.append(filename)
         ts = pp.ts_multi_files(files,var[vi],0)
         if zm:
@@ -125,6 +124,6 @@ for vi in range(nvar):
             if (flag[flagi] != ''):
                 ts_flag = pp.month_to_year(ts,flag[flagi])
             outfile = outdir+outdir_sub+diago+'.'+timeo+'.'+simo[i]+'.npz'
-            fio.save(outfile,**{varo[vi]:ts_flag[108*12:,...]})
+            fio.save(outfile,**{varo[vi]:ts_flag})
     print var[vi]
     

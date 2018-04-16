@@ -21,30 +21,11 @@ mpl.rc('lines', linewidth=2)
 mpl.rc('figure', figsize=[6*4./3,6])
 mpl.rcParams['contour.corner_mask'] = False
 
-latlim_dict = {'EU':[[36,45],[36,45],[45,66],[45,66],[66,81]],
-    'NM':[[76,83],[60,76],[29,60],[25,29]],
-    'EA':[[22,28],[28,47],[47,50],[19,22]],
-    'SA':[[25,29],[-11,38],[-11,28],[-11,22]],
-    'ME':[[36,38],[25,38],[12,38],[29,38]],  
-    'RU':[[38,45],[38,81],[47,81],[50,81]],
-    'AF':[[-35,36],[-35,36],[-35,25],[-35,12]],
-    'AU':[[-47,-11]],
-    'SM':[[-56,29],[-56,25]],
-    'global':[[-90,90]]}
-lonlim_dict = {'EU':[[336,360],[0,24],[336,360],[0,49],[0,49]],
-    'NM':[[191,287],[191,298],[191,307],[263,307]],
-    'EA':[[97,145],[80,145],[87,145],[106,145]],
-    'SA':[[63,70],[70,80],[80,97],[97,150]],
-    'ME':[[24,32],[32,39],[39,63],[63,70]],
-    'RU':[[24,49],[49,80],[80,87],[87,191]],
-    'AF':[[343,360],[0,32],[32,39],[39,51]],
-    'AU':[[113,179]],
-    'SM':[[245,259],[259,326]],
-    'global':[[0,360]]}
-
 region = ['EU','NM','EA','SA','ME','RU','AF','AU','SM']
-#region = ['AU']
+region = ['tropics','extratropics']
 nregion = np.size(region)
+
+land = False
 
 filename = '/home/z1s/research/climate/atmos_level.static.nc'
 fs = nc.netcdf_file(filename,'r',mmap=True)
@@ -52,21 +33,24 @@ lat = fs.variables['lat'][:]
 nlat = np.size(lat)
 lon = fs.variables['lon'][:]
 nlon = np.size(lon)
-land_mask = fs.variables['land_mask'][:]
+land_mask1 = fs.variables['land_mask'][:]
 fs.close()
-region_mask = np.zeros((nlat,nlon))
-region_mask_obs = np.zeros((nlat,nlon))
+land_mask = land_mask1.copy()
+if not land:
+    land_mask[:,:] = 1
+region_mask = -np.ones((nlat,nlon))
+region_mask_obs = -np.ones((nlat,nlon))
 
 latt,lont,land_mask_obs = pp.grid_for_map(lat,lon,land_mask)
 
 
 for regi in range(nregion):
-    (latlim,lonlim) = grid.get_region(region[regi],lonmax=360)
+    (latlim,lonlim) = grid.get_region_lim(region[regi],lonmax=360)
     nlim = np.shape(latlim)[0]
     for i in range(nlim):
         mask = grid.regionMask(lat,lon,latlim[i],lonlim[i])
         region_mask[np.where(mask==1)] = regi+1
-    (latlim,lonlim) = grid.get_region(region[regi],lonmax=180)
+    (latlim,lonlim) = grid.get_region_lim(region[regi],lonmax=180)
     nlim = np.shape(latlim)[0]
     for i in range(nlim):
         mask = grid.regionMask(latt,lont,latlim[i],lonlim[i])
@@ -88,7 +72,7 @@ clev = np.arange(0,nregion+1,1)
 plt.figure()
 m.drawcoastlines()
 m.drawcountries()
-m.contourf(x,y,region_mask_tr,clev,cmap=cmap)
+m.contourf(x,y,region_mask_obs,clev,cmap=cmap)
 m.colorbar()
 plt.tight_layout()
 """

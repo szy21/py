@@ -23,7 +23,7 @@ Rad = 6371.0e3
 basedir = '/archive/Zhaoyi.Shen/fms/ulm_201505_c3/SM2/'
 outdir = '/home/z1s/research/nonlinearity/analysis/npz/'
 exper = 'SM2_'
-pert = ['control_1990','m2c35w30']
+pert = ['control_1990','m2c00w30_m2c35w30']
 plat = '/gfdl.ncrc3-intel-prod-openmp/'
 diag = 'atmos_month'
 reg = '1x12m0d_30x4a/'
@@ -47,6 +47,7 @@ nlon = 144
 nt = 2
 data = np.zeros([npert,nlat])
 swts = np.zeros([npert,nt])
+tmp_tm = np.zeros((npert,nlat,nlon))
 fs = []
 for i in range(npert):
     filedir = basedir+exper+pert[i]+plat+reg+'history/'
@@ -54,11 +55,13 @@ for i in range(npert):
     fs.append(nc.netcdf_file(filename,'r',mmap=True))
     #pfull = fs[-1].variables['pfull'][:].astype(np.float64)
     lat = fs[-1].variables['lat'][:].astype(np.float64)
+    lon = fs[-1].variables['lon'][:].astype(np.float64)
     tmp = fs[-1].variables[var][:,:,:].astype(np.float64) #t,p,lat,lon
     #tmp[np.where(tmp<-999)] = np.nan
-    tmp = np.mean(tmp,2)
+    tmp_zm = np.mean(tmp,-1)
     #swts[i,:] = tmp[:,57]
-    data[i,:] = np.mean(tmp,0)
+    data[i,:] = np.mean(tmp_zm,0)
+    tmp_tm[i,:,:] = np.mean(tmp,0)
     fs[-1].close()
     #%%
 nlat = np.size(lat)
@@ -67,11 +70,17 @@ weight = np.cos(lat*np.pi/180.)
 weight1 = weight/np.sum(weight)
 weight1.shape = [1,nlat]
 tmpglb = np.sum(data*weight1,1)
-
+plt.figure()
 for i in range(npert):
     plt.plot(lat,data[i,:]-data[0,:])
 plt.figure()
 for i in [0,1]:
     plt.plot(lat,data[i,:])
+for i in range(1,npert):
+    plt.figure()
+    cs = plt.contour(lon,lat,tmp_tm[0,:,:],colors='k')
+    plt.clabel(cs,fontsize=16,fmt='%1.0f',inline=1)
+    plt.contourf(lon,lat,tmp_tm[i,:,:]-tmp_tm[0,:,:],cmap=plt.cm.hot)
+    plt.colorbar()
 #%%
 

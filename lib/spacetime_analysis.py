@@ -64,8 +64,7 @@ def calc_phasespeed_cospectrum(a,b,**kwargs):
     sf_cp = (np.pi*RADIUS/ki)/int_time/cp_all[-1]
     cp_all = cp_all*sf_cp
     pcp_all = pcp_all/sf_cp
-    return pcp_all,cp_all
-        
+    return pcp_all,cp_all        
     
 def calc_powerspectrum(a,**kwargs):
     nfft_time = np.shape(a)[0]

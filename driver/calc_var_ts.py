@@ -19,18 +19,7 @@ LE = 2.500e6
 GRAV = 9.80
 RAIR = 287.04
 RADIUS = 6371.0e3
-"""
-indir = '/archive/Zhaoyi.Shen/fms/siena/AM2.1/'
-indir_sub = 'ts/monthly/146yr/'
-outdir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM2.1n/'
-exper = 'AM2.1RC3_'
-pert_dict = {'1860_':'SST_','allforc_':'all_',\
-             'WMGGOnly_':'WMGG_','aeroOnly_':'aero_',\
-             '1860aero_':'1860aero_'}
-pert = ['1860_','allforc_','aeroOnly_','1860aero_']
-ens = ['A1','A2','A3','A4','A5']
-enso = ens
-"""
+
 indir = '/archive/Zhaoyi.Shen/fms/ulm_201505_c3/SM2/'
 indir_sub = 'ts/monthly/20yr/'
 outdir = '/home/Zhaoyi.Shen/research/nonlinear/npz/SM2/'
@@ -61,19 +50,12 @@ pert = [
     ]
 ens = ['']
 enso = ens
-"""
-indir = '/archive/s1h/am2/'
-indir_sub = 'ts/monthly/30yr/'
-outdir = '/home/Zhaoyi.Shen/research/landprecip/npz/'
-exper = 'am2clim_reyoi'
-pert_dict = {'':'RAS','_uw_lofactor0.5':'UW'}
-pert = ['','_uw_lofactor0.5']
-ens = ['','+2K']
-enso = ens
-"""
-flag = ['annual','DJF','JJA']
+
+flag = ['annual']
 nflag = np.size(flag)
-sub_dict = {'annual':'annual','MAM':'MAM','JJA':'JJA','SON':'SON','DJF':'DJF'}
+sub_dict = {'annual':'annual',\
+'MAM':'MAM','JJA':'JJA','SON':'SON','DJF':'DJF',\
+'MJJASO':'MJJASO','JJASON':'JJASON'}
 
 npert = np.size(pert)
 nens = np.size(ens)
@@ -90,23 +72,24 @@ var = ['swdn_sfc','swup_sfc','swdn_toa','swup_toa',\
        'evap','shflx','netrad_toa','netrad_toa_clr']
 """
 nvar = np.size(var)
-varo = ['t_ref_zm']
+varo = var
 sim = []
 simo = []
 for i in range(npert):
     for j in range(nens):
-        sim.append(pert[i]+ens[j])
+        sim.append(ens[j]+pert[i])
         simo.append(pert_dict[pert[i]]+enso[j])
 nsim = np.size(sim)
 
-zm = True
+zm = False
 init = True
 init3d = False
 init3dp = False
-timeo = '0761-0860'
-yr1 = np.arange(761,842,20)
-yr2 = np.arange(780,861,20)
-yr_ts = np.ones(100)
+timeo = '1870-2014'
+yr1 = np.arange(1870,2011,5)
+yr2 = np.arange(1874,2015,5)
+yr_ts = np.arange(1870,2015,1)
+#yr_ts = np.ones(30)
 nyr1 = np.size(yr1)
 nyr = yr2[-1]-yr1[0]+1
 yr = np.arange(yr1[0],yr2[-1],1)
@@ -168,6 +151,7 @@ for vi in range(nvar):
             outfile = outdir+'dim.'+simo[i]+'.npz'
             fio.save(outfile,level=level)
         for flagi in range(nflag):
+            ts_flag = ts
             if (flag[flagi] != ''):
                 ts_flag = pp.month_to_year(ts,yr_ts,flag[flagi])
                 outdir_sub='ts/'+sub_dict[flag[flagi]]+'/'

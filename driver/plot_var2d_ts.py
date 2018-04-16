@@ -27,10 +27,9 @@ GRAV = 9.80
 RAD = 6371.0e3
 LE = 2.5e6
 
-outdir = '/home/z1s/research/nonlinear/npz/SM2/'
+outdir = '/home/z1s/research/nonlinear/npz/SM2/asym/'
 outdir_sub = 'ts/annual/'
-pert = ['ctrl','2xCO2',\
-    'm4c25','m2c25','m1c25',\
+pert = ['ctrl','m0.25latc25lonc100260','m0.5latc25lonc100260','m0.75latc25lonc100260','m1latc25lonc100260'
     #'m2c00','m2c05','m2c15','m2c25','m2c35','m2c45','m2c50','m6c25',\
     #'m0.5c15','m6c35',\
     #'2xCO2+m2c00','2xCO2+m2c05','2xCO2+m2c15','2xCO2+m2c25',\
@@ -70,7 +69,7 @@ plt.figure()
 for i in ind:
     x = t_ref_gm[i,:]-t_ref_gm[0,:]
     plt.plot(x)
-    print np.mean(x[20:])
+    print np.mean(x[80:])
 
 #%%
 """

@@ -24,24 +24,24 @@ mpl.rcParams['ps.useafm'] = True
 Cp = 1004.64
 g = 9.80
 Rad = 6371.0e3
-outdir = '/home/z1s/research/nonlinear/npz/SM2/'
+outdir = '/home/z1s/research/nonlinear/npz/SM2/asym/'
 outdir_sub = 'ts/DJF/'
-pert = ['ctrl','2xCO2','m2c25']
+pert = ['ctrl','m0.25latc25lonc100260']
 npert = np.size(pert)
 #npert = 4
-var = 'ucomp_zm'
-clabel = 'Temperature (K)'
+var = 'temp_zm'
+clabel = 'temp (K)'
 #clabel = 'Zonal wind (m s$^{-1}$)'
 sc = 1
 clev = np.arange(-30,31,10)
-clev1 = np.arange(-5,5.1,0.5)/sc
-diag = 'var3d'
+clev1 = np.arange(-1,1.1,0.1)/sc
+diag = 'var3dp'
 time = '0761-0860.'
 filename = outdir+'dim.'+pert[0]+'.npz'
 npz = np.load(filename)
 lat = npz['lat']
 nlat = np.size(lat)
-pfull = npz['pfull']
+pfull = npz['level']
 npfull = np.size(pfull)
 tmp = np.zeros([npert,npfull,nlat])
 for i in range(npert):
@@ -49,7 +49,10 @@ for i in range(npert):
     npz = np.load(filename)
     #tmp[i,:,:,:] = npz[var] #pert,yr,p,lat
     #tmp[i,:,:,:] = 0.5*(npz[var][:,1:,:]+npz[var][:,:-1,:])
-    tmp[i,:,:] = np.mean(npz[var][20:,:,:],0)
+    tmp[i,:,:] = np.mean(npz[var][20:,...],0)
+    #theta = npz['theta_zm']
+    #tmp[i,:,:][16:,:] = theta[16:,:]
+    #tmp[i,:,:][:,21:42] = theta[:,21:42]
 
 ind = range(1,npert)
 #ind=[1]
@@ -92,8 +95,26 @@ plt.yticks(ytick)
 plt.tight_layout()
 """
 #fig,ax = plt.subplots(nrows=3,ncols=1,sharex=True)
-
-for i in ind:
+for i in []:
+    #plt.subplot(3,1,i)
+    plt.figure()
+    cs = plt.contour(x,y,tmp[i,:,:],\
+                     clev,\
+                     linewidths=1,colors='k')
+    plt.clabel(cs,fontsize=16,fmt='%1.0f',inline=1)
+    cs = plt.contour(x,y,tmp[i,:,:],\
+                     [0],\
+                     linewidths=2,colors='k')
+    plt.gca().invert_yaxis()
+    plt.xticks(xtick)
+    plt.xlim(xlim)
+    plt.xlabel('Latitude')    
+    plt.yticks(ytick)
+    #plt.yscale('log')
+    plt.ylabel('Pressure (hPa)')
+    plt.title(clabel+'   '+pert[i])
+    plt.tight_layout()
+for i in range(1,npert):
     #plt.subplot(3,1,i)
     plt.figure()
     cs = plt.contour(x,y,data*sc,\
@@ -112,7 +133,7 @@ for i in ind:
                  clev1,norm=norm,\
                  cmap=cmap,extend='both')
     cb = plt.colorbar(orientation='horizontal',pad=0.2)
-    cb.formatter.set_powerlimits((0,0))
+    #cb.formatter.set_powerlimits((0,0))
     #cb.ax.yaxis.set_offset_position('right')
     cb.update_ticks()
     cb.set_label(clabel)
@@ -126,10 +147,15 @@ for i in ind:
     plt.ylabel('Pressure (hPa)')
     plt.tight_layout()
 #%%
-"""
+
+color = ['k','b','r','b','r']
+ls = ['-','-','-','--','--']
 plt.figure()
-plt.contourf(x,y,tmp[0,:,:]-np.fliplr(tmp[0,:,:]))
-plt.ylim([0,1000])
-plt.gca().invert_yaxis()
-plt.colorbar()
-"""
+for i in range(npert):
+    plt.plot(x,tmp[i,-1,:],color=color[i],ls=ls[i])
+plt.legend(['LH0','LH0.5','LH1'],loc='best',ncol=3)
+plt.xticks(xtick)
+plt.xlim(xlim)
+plt.xlabel('Latitude')
+plt.ylabel('Zonal wind at 325 hPa (m/s)')
+plt.tight_layout()

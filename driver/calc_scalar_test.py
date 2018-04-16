@@ -21,18 +21,18 @@ g = 9.80
 Rair = 287.04
 Rad = 6371.0e3
 
-indir = '/archive/Zhaoyi.Shen/fms/ulm_201505_c3/SM2/'
+indir = '/archive/Zhaoyi.Shen/fms/ulm/AM3/'
 indir_sub = 'ts/monthly/5yr/'
 flag = 'annual'
-#exper = 'AM2.1RC3_'
-exper = 'SM2_'
-pert = ['control_1990','2xCO2','2xCO2+m6c35w30','2xCO2+m8c15w30']
+exper = 'c48L48_am3p11_'
+#exper = 'SM2_'
+pert = ['1860']#,'allforcr','aeroOnly','1860aeror']
 npert = np.size(pert)
-ens = ['']
+ens = ['_A1']
 nens = np.size(ens)
 plat = 'gfdl.ncrc3-intel-prod-openmp/'
-diag = 'atmos_level'
-var = 't_ref'
+diag = 'atmos_month_aer'
+var = 'sulfate_col'
 varo = var
 sim = []
 simo = []
@@ -47,9 +47,9 @@ col_integ = False
 init = False
 init3d = False
 init3dp = False
-yr_ts = np.ones(100)
-yr1 = np.arange(761,797,5)
-yr2 = np.arange(765,801,5)
+yr_ts = np.ones(1000)
+yr1 = np.arange(1870,2011,5)
+yr2 = np.arange(1874,2015,5)
 nyr1 = np.size(yr1)
 nyr = yr2[-1]-yr1[0]+1
 yrstr = []
@@ -99,5 +99,6 @@ for i in ind:
         ts = pp.month_to_year(ts,yr_ts,flag)
     if (i==0):
         ts0 = ts
-    plt.plot(ts-ts0)
+    plt.plot(ts)
+    print np.mean(ts[-40:])
 plt.legend(pert,fontsize=10)
