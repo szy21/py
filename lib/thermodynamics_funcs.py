@@ -1,6 +1,15 @@
 from parameters import *
 import numpy as np
 
+def pd(p0, qt, qv):
+    return p0 * (1.0-qt) / (1.0-qt+eps_vi*qv)
+
+def pv(p0, qt, qv):
+    return p0 * eps_vi * qv / (1.0-qt+eps_vi*qv)
+
+def cpm(qt):
+    return (1.0-qt)*cpd + qt*cpv
+
 def pv_star(T):
     # formula from Bolton 1980
     T_C = T - 273.15
