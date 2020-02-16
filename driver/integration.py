@@ -12,8 +12,8 @@ def integrand(x,xa,sigma):
     return np.exp(-(x-xa)**2/(2*sigma**2))*np.cos(x)/2.
     #return np.cos(x)
 
-xa = -10./180.*np.pi
-width = 30./180.*np.pi
+xa = 15./180.*np.pi
+width = 100./180.*np.pi
 sigma = width/(2*(2*np.log(100))**0.5)
 I = quad(integrand,-np.pi/2,np.pi/2,args=(xa,sigma))
 

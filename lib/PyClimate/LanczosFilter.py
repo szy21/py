@@ -1,3 +1,4 @@
+# Adapted for numpy/ma/cdms2 by convertcdms.py
 # LanczosFilter.py
 
 """Multivariate Lanczos filter
@@ -27,10 +28,13 @@
 # Meteorology, Lanczos filtering in one and two dimensions, volume 18, 
 # pages=1016-1022
 
-import numpy as Numeric
+import sys
+sys.path.append('/home/z1s/py/lib/')
+
+import numpy
 import LinearFilter
 
-import sys,math
+import math
 
 class LanczosFilter(LinearFilter.LinearFilter):
   """'LinearFilter' derived class for Lanczos filtering
@@ -105,7 +109,7 @@ class LanczosFilter(LinearFilter.LinearFilter):
     "Filter coefficients"
     n=self.length/2
     thepi=math.acos(-1.)
-    ocoefs=Numeric.zeros(self.length,Numeric.float64)
+    ocoefs=numpy.zeros(self.length,numpy.float64)
     # This is pretty singular...
     # sinc(0)=1!!; sin(2fx)/x = 2f!!
     k=0
@@ -122,10 +126,7 @@ class LanczosFilter(LinearFilter.LinearFilter):
       ocoefs[self._place(k,n,-1)]=firstfactor*sigma
     return ocoefs
 
-  def prettyprintcoefs(self):
-    "Pretty-print the coefficients"
-    print "# Lanczos: -> %4d coefficients"%(self.length,)
-    print "# Coefficients:"
-    for icoef in xrange(self.length):
-      print "# C: %2d %12.4f"%(icoef,self.coefs[icoef])
-    print "# Norm of the coefficients:",Numeric.add.reduce(self.coefs)
+
+  # Now, filter real data and compare with calibration results.
+  # Both high pass and low-pass versions
+  

@@ -21,11 +21,12 @@ mpl.rc('lines', linewidth=2)
 mpl.rc('figure', figsize=[6*4./3,6])
 mpl.rcParams['contour.corner_mask'] = False
 
-region = ['EU','NM','EA','SA','ME','RU','AF','AU','SM']
-region = ['tropics','extratropics']
+region = ['EuNAf','NAm','EAs','SAs']
+#region = ['tsEU','tsEA','tsNA']
+#region = ['largeEU','largeEA']
 nregion = np.size(region)
 
-land = False
+land = True
 
 filename = '/home/z1s/research/climate/atmos_level.static.nc'
 fs = nc.netcdf_file(filename,'r',mmap=True)
@@ -72,8 +73,11 @@ clev = np.arange(0,nregion+1,1)
 plt.figure()
 m.drawcoastlines()
 m.drawcountries()
+m.drawparallels(np.arange(-80,81,20))
 m.contourf(x,y,region_mask_obs,clev,cmap=cmap)
-m.colorbar()
+cb = m.colorbar()
+cb.set_ticklabels(region)
+cb.update_ticks()
 plt.tight_layout()
 """
 clev1 = np.arange(-1.6,1.7,0.2)

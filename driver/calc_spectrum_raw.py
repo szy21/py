@@ -82,17 +82,6 @@ for si in range(npert):
     #fio.save(outfile,**{varo_name:tr_zm})
     
 #%%
-"""
-Tot1 = (MMC+St+Tr)
-xsc = 2*np.pi*Rad*np.cos(lat/90*np.pi/2)
-xsc.shape = [1,nlat]
-clev = np.arange(-7,8,1)*1e15
-
-plt.figure(figsize=[4*6/3,4])
-plt.contourf(mon,lat,np.transpose(np.sum(St*dp1,1)/g*xsc),clev,cmap=plt.cm.RdYlBu_r,extend='both')
-plt.colorbar()
-"""
-#%%
 color = ['k','b','r','b','r']
 ls = ['-','-','-','--','--']
 plt.figure()

@@ -22,17 +22,17 @@ Rair = 287.04
 Rad = 6371.0e3
 
 indir = '/archive/Zhaoyi.Shen/fms/ulm/AM3/'
-indir_sub = 'ts/monthly/5yr/'
-flag = 'annual'
+indir_sub = 'ts/annual/146yr/'
+flag = ''
 exper = 'c48L48_am3p11_'
 #exper = 'SM2_'
-pert = ['1860']#,'allforcr','aeroOnly','1860aeror']
+pert = ['aeroOnly_','allforcr_']
 npert = np.size(pert)
-ens = ['_A1']
+ens = ['A1']
 nens = np.size(ens)
 plat = 'gfdl.ncrc3-intel-prod-openmp/'
-diag = 'atmos_month_aer'
-var = 'sulfate_col'
+diag = 'atmos_level'
+var = 'swup_toa'
 varo = var
 sim = []
 simo = []
@@ -48,21 +48,28 @@ init = False
 init3d = False
 init3dp = False
 yr_ts = np.ones(1000)
-yr1 = np.arange(1870,2011,5)
-yr2 = np.arange(1874,2015,5)
+yr1 = np.arange(1870,1871,1)
+yr2 = np.arange(2015,2016,1)
 nyr1 = np.size(yr1)
 nyr = yr2[-1]-yr1[0]+1
 yrstr = []
+yrstr_up = []
+yrstr_dn = []
 for yri in range(nyr1):
     yr1C = ('000'+str(yr1[yri]))[-4:]
     yr2C = ('000'+str(yr2[yri]))[-4:]
-    yrC = yr1C+'01-'+yr2C+'12.'+var
+    yrC = yr1C+'-'+yr2C+'.'+var
+    yrC_up = yr1C+'-'+yr2C+'.'+'swup_toa'
+    yrC_dn = yr1C+'-'+yr2C+'.'+'swdn_toa'
     yrstr.append(yrC)
+    yrstr_up.append(yrC_up)
+    yrstr_dn.append(yrC_dn)
 ind = range(nsim)
 nfile = np.size(yrstr)
 
 #npert = 1
 land_mask = 0
+#plt.figure(figsize=[3.5*4/3.,3.5])
 for i in ind:
     atmdir = indir+exper+sim[i]+'/'+plat+'pp/'+diag+'/'
     stafile = atmdir+diag+'.static.nc'
@@ -81,10 +88,18 @@ for i in ind:
     #%%
     filedir = atmdir+indir_sub
     files = []
+    files_up = []
+    files_dn = []
     for fi in range(nfile):
         filename = filedir+diag+'.'+yrstr[fi]+'.nc'
         files.append(filename)
+        filename = filedir+diag+'.'+yrstr_up[fi]+'.nc'
+        files_up.append(filename)
+        filename = filedir+diag+'.'+yrstr_dn[fi]+'.nc'
+        files_dn.append(filename)
     ts = pp.ts_multi_files(files,var,0)
+    #ts = pp.ts_multi_files(files_dn,'swdn_toa',0)-\
+    #     pp.ts_multi_files(files_up,'swup_toa',0)-pp.ts_multi_files(files,'olr',0)
     if col_integ:
         ts = ts[:,-1,:,:]
     if zonal_mean:
@@ -99,6 +114,10 @@ for i in ind:
         ts = pp.month_to_year(ts,yr_ts,flag)
     if (i==0):
         ts0 = ts
-    plt.plot(ts)
-    print np.mean(ts[-40:])
+    if (i>0):
+        plt.plot(ts-ts0)
+        print np.mean(ts[-20:]-ts0[-20:])
+    #print np.std(ts[-20:])
 plt.legend(pert,fontsize=10)
+plt.ylabel(var)
+plt.tight_layout()

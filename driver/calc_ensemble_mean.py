@@ -11,11 +11,11 @@ import postprocess as pp
 from scipy.io import netcdf as nc
 import numpy as np
 
-indir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM2.1n/'
-indir_sub = 'ts/annual/'
+indir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM4n/'
+indir_sub = 'ts/SON/'
 outdir = indir
 outdir_sub = indir_sub
-pert = ['LU']
+pert = ['aero']
 npert = np.size(pert)
 ens = ['_A1','_A2','_A3','_A4','_A5']
 nens = np.size(ens)

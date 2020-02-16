@@ -5,7 +5,18 @@ Created on Tue Feb 24 16:41:51 2015
 @author: z1s
 """
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 import numpy as np
+
+class MidpointNormalize(colors.Normalize):
+    def __init__(self, vmin=None, vmax=None, midpoint=None, clip=False):
+        self.midpoint = midpoint
+        colors.Normalize.__init__(self, vmin, vmax, clip)
+							
+    def __call__(self, value, clip=None):
+	     x, y = [self.vmin, self.midpoint, self.vmax], [0, 0.5, 1]
+	     return np.ma.masked_array(np.interp(value, x, y))
+
 def plotyy(xx,arr1,arr2,**kwargs):
     figsize = [4*16./9,4];
     if 'figsize' in kwargs.keys():
