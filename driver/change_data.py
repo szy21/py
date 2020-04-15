@@ -15,8 +15,8 @@ RADIUS = 6371.0e3
 LE = 2.500e6
 
 #basedir = '/home/z1s/research/nonlinear/npz/SM2/sym/ts/JJA/'
-basedir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM4n/ts/SON/'
-pert = ['aero_']
+basedir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM4n/ts/JJAS/'
+pert = ['SST_','1860aero_']
 """
 pert = ['ctrl_warsaw','2xCO2_warsaw',\
 'm2c20w100','m2.5c20w100','m3c20w100','m3.5c20w100',\
@@ -28,7 +28,7 @@ pert = ['ctrl_warsaw','2xCO2_warsaw',\
 """
 npert = np.size(pert)
 #ens = ['']
-ens = ['A5']
+ens = ['A1','A2','A3','A4','A5']
 npert = np.size(pert)
 nens = np.size(ens)
 sim = []

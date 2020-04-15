@@ -65,7 +65,7 @@ def ts_multi_files(files, var_name, dim, f=None):
 def month_to_year(arr1,year,flag,weighted=True):
     t_dict = {'annual':[0,12],\
         'MAM':[2,5],'JJA':[5,8],'SON':[8,11],'DJF':[-1,2],'JAS':[6,9],\
-        'MJJASO':[4,10],'JJASON':[5,11]}
+        'MJJASO':[4,10],'JJASON':[5,11],'JJAS':[5,9]}
     weight_dict = {'annual':np.array((31,28,31,30,31,30,31,31,30,31,30,31))/365.,\
         'MAM':np.array((31,30,31))/92.,\
         'JJA':np.array((30,31,31))/92.,\
@@ -73,7 +73,8 @@ def month_to_year(arr1,year,flag,weighted=True):
         'DJF':np.array((31,31,28))/90.,\
         'JAS':np.array((31,31,30))/92.,\
         'MJJASO':np.array((31,30,31,31,30,31))/184.,\
-        'JJASON':np.array((30,31,31,30,31,30))/183.}
+        'JJASON':np.array((30,31,31,30,31,30))/183.,\
+        'JJAS':np.array((30,31,31,30))/122.}
     weight_leap_dict = weight_dict.copy()
     weight_leap_dict['annual'] = np.array((31,29,31,30,31,30,31,31,30,31,30,31))/366.
     weight_leap_dict['DJF'] = np.array((31,31,29))/91.

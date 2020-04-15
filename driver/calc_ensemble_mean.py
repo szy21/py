@@ -11,17 +11,17 @@ import postprocess as pp
 from scipy.io import netcdf as nc
 import numpy as np
 
-indir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM4n/'
-indir_sub = 'ts/SON/'
+indir = '/archive/Zhaoyi.Shen/home/research/climate/npz/AM4/'
+indir_sub = 'ts/annual/'
 outdir = indir
 outdir_sub = indir_sub
-pert = ['aero']
+pert = ['SST']
 npert = np.size(pert)
-ens = ['_A1','_A2','_A3','_A4','_A5']
+ens = ['_A1']
 nens = np.size(ens)
-diag = 'var2d'
+diag = 'rad2d'
 
-var = ['t_ref']
+var = ['netrad_toa']
 #var = ['salt_col','dust_col']
 """
 var = ['swdn_sfc','swup_sfc','swdn_toa','swup_toa',\
@@ -30,7 +30,7 @@ var = ['swdn_sfc','swup_sfc','swdn_toa','swup_toa',\
        'evap','shflx','netrad_toa','netrad_toa_clr']
 """
 nvar = np.size(var)
-time = '1870-2015'
+time = '1870-2014'
 for vi in range(nvar):
     for i in range(npert):
         filename = indir+indir_sub+diag+'.'+time+'.'+pert[i]+ens[0]+'.npz'
