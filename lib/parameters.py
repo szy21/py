@@ -6,6 +6,7 @@ eps_v = Rd / Rv
 eps_vi = 1.0 / eps_v
 cpd = 1004.0
 cpv = 1859.0
+cpl = 4181.0
 kappa = Rd / cpd
 p_tilde = 1.e5
 T_tilde = 298.15

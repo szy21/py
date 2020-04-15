@@ -10,6 +10,9 @@ def pv(p0, qt, qv):
 def cpm(qt):
     return (1.0-qt)*cpd + qt*cpv
 
+def Rm(qt):
+    return (1.0-qt)*Rd + qt*Rv
+
 def pv_star(T):
     # formula from Bolton 1980
     T_C = T - 273.15
