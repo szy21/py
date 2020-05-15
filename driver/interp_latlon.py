@@ -14,10 +14,10 @@ import scipy.interpolate as interp
 import numpy as np
 import matplotlib.pyplot as plt
 
-model = 'CM4'
-obs = 'BEST_LO'
-indir = '/archive/Zhaoyi.Shen/home/research/climate/npz/'+model+'/'
-indir_sub = 'ts/DJF/'
+model = 'AM2'
+obs = 'BESTn'
+indir = '/archive/Zhaoyi.Shen/home/research/climate/npz_interp/'+model+'/'
+indir_sub = 'ts/JJA/'
 outdir = '/archive/Zhaoyi.Shen/home/research/climate/npz_interp/'+obs+'/'+model+'/'
 outdir_sub = indir_sub
 grid_outf = '/archive/Zhaoyi.Shen/home/research/climate/npz_interp/'+\
@@ -30,7 +30,7 @@ nlon = np.size(lon_out)
 (lonm_out,latm_out) = np.meshgrid(lon_out,lat_out)
 pert = ['all']
 npert = np.size(pert)
-ens = ['_A1']
+ens = ['_mean']
 nens = np.size(ens)
 sim = []
 for i in range(npert):
@@ -39,7 +39,7 @@ for i in range(npert):
 nsim = np.size(sim)
 var = 't_ref'
 diag = 'var2d'
-time = '1850-2014'
+time = '1850-2015'
 for si in range(nsim):
     grid_inf = indir+'dim.'+sim[0]+'.npz'
     npz = np.load(grid_inf)
@@ -51,7 +51,7 @@ for si in range(nsim):
     land_mask_out = interp.griddata(np.array([latm_in.ravel(),lonm_in.ravel()]).T,\
         land_maskt.ravel(),(latm_out,lonm_out),method='linear')
     outfile = outdir+'dim.'+sim[si]+'.npz'
-    fio.save(outfile,land_mask=land_mask_out)
+    fio.save(outfile,lat=lat_out,lon=lon_out,land_mask=land_mask_out)
     filename = indir+indir_sub+diag+'.'+time+'.'+sim[si]+'.npz'
     npz = np.load(filename)
     tmp_in = npz[var]
