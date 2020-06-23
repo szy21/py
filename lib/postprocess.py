@@ -130,7 +130,7 @@ def day_to_year(arr1,year,flag):
 def grid_for_map(lat,lon,arr1):
     nlon = np.size(lon)
     nlat = np.size(lat)
-    lonmid = nlon/2
+    lonmid = int(nlon/2)
     lont = np.zeros(nlon)
     lont[:lonmid] = lon[lonmid:]-360
     lont[lonmid:nlon] = lon[:lonmid]

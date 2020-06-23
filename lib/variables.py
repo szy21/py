@@ -17,7 +17,10 @@ var_name_dict_CAM6 = {
     'TGCLDLWP':'lwp','TGCLDIWP':'iwp','TGCLDCWP':'cwp','AREL':'arel','AWNC':'cdnc','CCN3':'ccn3','FREQL':'freql'
     }
 
+unit_dict_AM4 = {
+	'low_cld_amt':0.01, 'mid_cld_amt':0.01, 'high_cld_amt':0.01, 'tot_cld_amt':0.01,
+	'reff_modis':1.e-6
+	}
 unit_dict_CAM6 = {
-    'CLDLOW':100.0,'CLDMID':100.0,'CLDHGH':100.0,'CLDTOT':100.0,
     'PRECC':86400.0,'PRECL':86400.0
     }
