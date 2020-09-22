@@ -24,3 +24,13 @@ unit_dict_AM4 = {
 unit_dict_CAM6 = {
     'PRECC':86400.0,'PRECL':86400.0
     }
+
+var_name_dict_clima_to_pycles = {
+    'u':'u_mean','v':'v_mean','w':'w_mean','temp':'temperature_mean',
+    'qt':'qt_mean','thd':'theta_mean','thl':'thetali_mean','ql':'ql_mean','cld_frac':'cloud_fraction',
+    'var_u':'u_mean2','var_v':'v_mean2','var_w':'w_mean2','w3':'w_mean3','tke':'tke_mean',
+    'var_qt':'qt_mean2','var_thl':'thetali_mean2',
+    'cov_w_qt':'qt_flux_z','w_qt_sgs':'qt_sgs_flux_z',
+    'cld_frac':'cloud_fraction','cld_cover':'cloud_fraction','lwp':'lwp','tke_vint':'tke_vint',
+    'cld_top':'cloud_top','cld_base':'cloud_base',
+    'core_frac':'fraction_core','w_core':'w_core','ql_core':'ql_core','var_w_core':'w2_core'}
