@@ -1,4 +1,5 @@
 import numpy as np
+import xarray as xr
 
 dpm = {'noleap': [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
        '365_day': [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31],
@@ -39,3 +40,14 @@ def get_dpm(time, calendar='standard'):
         if leap_year(year, calendar=calendar) and month == 2:
             month_length[i] += 1
     return month_length
+
+def seasonal_mean_timeseries(da, calendar='standard'):
+    """
+    return a timeseries of seasonal mean from a timeseries of monthly mean
+    """
+    month_length = xr.DataArray(get_dpm(da.time.to_index(), calendar=calendar),
+    coords=[da.time], name='month_length')
+    weights = month_length.groupby('time.year') / month_length.astype(float).groupby('time.year').sum()
+    np.testing.assert_allclose(weights.groupby('time.year').sum().values, 1)
+    da_weighted = (da * weights).groupby('time.year').sum(dim='time')
+    return da_weighted
